@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . "/controllers/SiteController.php";
 
-$plano = planoEscolhido();
+$plano = planoEscolhido($_GET['id']);
 
 $usuario = contratar();
 

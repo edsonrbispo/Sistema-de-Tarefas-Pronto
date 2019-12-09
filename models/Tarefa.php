@@ -36,10 +36,11 @@ function listarTarefas($filtrar)
             return false;
         }
     } else {
+
         $sql = "SELECT * FROM tarefas WHERE usuario_id = :usuario_id ORDER BY tarefas.id DESC";
         try {
             $stmt = $db->prepare($sql);
-            $stmt->bindParam(":usuario_id", $_SESSION['usuario']['id'], PDO::PARAM_INT);
+            $stmt->bindParam(":usuario_id", $_SESSION['usuario']['id']);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC); //PDO::FETCH_OBJ
         } catch (PDOException $e) {
@@ -51,19 +52,23 @@ function listarTarefas($filtrar)
 
 
 
-function cadastrarTarefa($dado)
+function cadastrarTarefa($tarefa)
 {
+
+    if (validacaoTarefa($tarefa))
+        return false;
+
     $db = conexao();
     $sql = "INSERT INTO tarefas (tarefa, descricao, prioridade, status, data_cadastro, usuario_id) 
                        VALUES (:tarefa, :descricao, :prioridade, :status, :data_cadastro, :usuario_id)";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":tarefa", $dado['tarefa'], PDO::PARAM_STR);
-        $stmt->bindParam(":descricao", $dado['descricao'], PDO::PARAM_STR);
-        $stmt->bindParam(":prioridade", $dado['prioridade'], PDO::PARAM_STR);
-        $stmt->bindParam(":status", $dado['status'], PDO::PARAM_INT);
-        $stmt->bindParam(":data_cadastro", $dado['data_cadastro'], PDO::PARAM_STR);
-        $stmt->bindParam(":usuario_id", $dado['usuario_id'], PDO::PARAM_INT);
+        $stmt->bindParam(":tarefa", $tarefa['tarefa']);
+        $stmt->bindParam(":descricao", $tarefa['descricao']);
+        $stmt->bindParam(":prioridade", $tarefa['prioridade']);
+        $stmt->bindParam(":status", $tarefa['status']);
+        $stmt->bindParam(":data_cadastro", $tarefa['data_cadastro']);
+        $stmt->bindParam(":usuario_id", $tarefa['usuario_id']);
 
         $stmt->execute();
 
@@ -86,7 +91,7 @@ function buscarTarefa($id)
 
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (\PDOException $e) {
@@ -95,7 +100,7 @@ function buscarTarefa($id)
     }
 }
 
-function editarTarefa($dado, $id)
+function editarTarefa($tarefa, $id)
 {
 
     $db = conexao();
@@ -109,11 +114,11 @@ function editarTarefa($dado, $id)
                 WHERE id = :id";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":tarefa", $dado['tarefa'], PDO::PARAM_STR);
-        $stmt->bindParam(":descricao", $dado['descricao'], PDO::PARAM_STR);
-        $stmt->bindParam(":prioridade", $dado['prioridade'], PDO::PARAM_STR);
-        $stmt->bindParam(":status", $dado['status'], PDO::PARAM_INT);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":tarefa", $tarefa['tarefa']);
+        $stmt->bindParam(":descricao", $tarefa['descricao']);
+        $stmt->bindParam(":prioridade", $tarefa['prioridade']);
+        $stmt->bindParam(":status", $tarefa['status']);
+        $stmt->bindParam(":id", $id);
 
         $stmt->execute();
 
@@ -135,7 +140,7 @@ function deletarTarefa($id)
     $sql = "DELETE FROM tarefas WHERE id=:id";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
         return true;
     } catch (PDOException $e) {
@@ -159,8 +164,8 @@ function atualizarStatusTarefa($id)
                WHERE id = :id";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":status", $status, PDO::PARAM_INT);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":status", $status);
+        $stmt->bindParam(":id", $id);
 
         $stmt->execute();
 
@@ -169,4 +174,17 @@ function atualizarStatusTarefa($id)
         die($e->getMessage());
         return false;
     }
+}
+
+function validacaoTarefa($tarefa)
+{
+
+    $validacao = false;
+
+    if ($tarefa['tarefa'] == "") {
+        $_SESSION['tarefa'] = 'Campo Obrigatório';
+        $validacao = true;
+    }
+
+    return $validacao;
 }

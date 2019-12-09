@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/controllers/PaginaController.php';
 
-$pagina = visualizar();
+$pagina = visualizar($_GET['id']);
 
 //var_dump($pagina);
 

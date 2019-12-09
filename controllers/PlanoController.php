@@ -13,10 +13,8 @@ function index()
     return $planos;
 }
 
-function visualizar()
+function visualizar($id)
 {
-
-    $id = $_GET['id'];
     $plano = buscarPlano($id);
     return $plano;
 }
@@ -24,51 +22,47 @@ function visualizar()
 function cadastrar()
 {
 
-
     $plano = [];
 
     if (!empty($_POST)) {
 
-        $plano['titulo'] = $_POST['titulo'];
-        $plano['descricao'] = $_POST['descricao'];
-        $plano['valor'] = str_replace(',', '.', str_replace('.', '', $_POST['valor']));
+        $plano = [
+            'titulo' => $_POST['titulo'],
+            'descricao' => $_POST['descricao'],
+            'valor' => str_replace(',', '.', str_replace('.', '', $_POST['valor'])),
+        ];
 
-        if (validacaoPlano()) {
-            if (cadastrarPlano($plano)) {
+        if (cadastrarPlano($plano)) {
 
-                $_SESSION['mensagem'] = 'Plano cadastrado com sucesso!';
+            $_SESSION['mensagem'] = 'Plano cadastrado com sucesso!';
 
-                header('Location:/admin/plano');
-                exit;
-            }
+            header('Location:/admin/plano');
+            exit;
         }
     }
 
     return $plano;
 }
 
-function editar()
+function editar($id)
 {
-
-
-    $id = $_GET['id'];
 
     $plano = buscarPlano($id);
 
     if (!empty($_POST)) {
 
-        $plano['titulo'] = $_POST['titulo'];
-        $plano['descricao'] = $_POST['descricao'];
-        $plano['valor'] = str_replace(',', '.', str_replace('.', '', $_POST['valor']));
+        $plano = [
+            'titulo' => $_POST['titulo'],
+            'descricao' => $_POST['descricao'],
+            'valor' => str_replace(',', '.', str_replace('.', '', $_POST['valor'])),
+        ];
 
-        if (validacaoPlano()) {
-            if (editarPlano($plano, $id)) {
+        if (editarPlano($plano, $id)) {
 
-                $_SESSION['mensagem'] = 'Plano editado com sucesso!';
+            $_SESSION['mensagem'] = 'Plano editado com sucesso!';
 
-                header('Location:/admin/plano');
-                exit;
-            }
+            header('Location:/admin/plano');
+            exit;
         }
     }
 
@@ -83,27 +77,4 @@ function deletar($id)
         header('Location:/admin/plano');
         exit;
     }
-}
-
-function validacaoPlano()
-{
-
-    $validacao = true;
-
-    if ($_POST['titulo'] == "") {
-        $_SESSION['titulo'] = 'Campo Obrigatório';
-        $validacao = false;
-    }
-
-    if ($_POST['descricao'] == "") {
-        $_SESSION['descricao'] = 'Campo Obrigatório';
-        $validacao = false;
-    }
-
-    if ($_POST['valor'] == "") {
-        $_SESSION['valor'] = 'Campo Obrigatório';
-        $validacao = false;
-    }
-
-    return $validacao;
 }

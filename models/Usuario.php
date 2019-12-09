@@ -25,18 +25,22 @@ function listarUsuarios()
 
 function cadastrarUsuario($usuario)
 {
+
+    if (validacaoUsuario($usuario))
+        return false;
+
     $db = conexao();
     $sql = "INSERT INTO usuarios (nome, email, senha, foto, nivel, data_cadastro, plano_id) 
                        VALUES (:nome, :email, :senha, :foto, :nivel, :data_cadastro, :plano_id)";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":nome", $usuario['nome'], PDO::PARAM_STR);
-        $stmt->bindParam(":email", $usuario['email'], PDO::PARAM_STR);
-        $stmt->bindParam(":senha", $usuario['senha'], PDO::PARAM_STR);
-        $stmt->bindParam(":foto", $usuario['foto'], PDO::PARAM_STR);
-        $stmt->bindParam(":nivel", $usuario['nivel'], PDO::PARAM_INT);
-        $stmt->bindParam(":data_cadastro", $usuario['data_cadastro'], PDO::PARAM_STR);
-        $stmt->bindParam(":plano_id", $usuario['plano_id'], PDO::PARAM_INT);
+        $stmt->bindParam(":nome", $usuario['nome']);
+        $stmt->bindParam(":email", $usuario['email']);
+        $stmt->bindParam(":senha", $usuario['senha']);
+        $stmt->bindParam(":foto", $usuario['foto']);
+        $stmt->bindParam(":nivel", $usuario['nivel']);
+        $stmt->bindParam(":data_cadastro", $usuario['data_cadastro']);
+        $stmt->bindParam(":plano_id", $usuario['plano_id']);
         $stmt->execute();
 
         return true;
@@ -59,7 +63,7 @@ function buscarUsuario($id)
 
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (\PDOException $e) {
@@ -71,6 +75,8 @@ function buscarUsuario($id)
 
 function editarUsuario($usuario, $id)
 {
+    if (validacaoUsuario($usuario))
+        return false;
 
     $db = conexao();
     $sql = "UPDATE usuarios
@@ -85,13 +91,14 @@ function editarUsuario($usuario, $id)
                 WHERE id=:id";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":nome", $usuario['nome'], PDO::PARAM_STR);
-        $stmt->bindParam(":email", $usuario['email'], PDO::PARAM_STR);
-        $stmt->bindParam(":senha", $usuario['senha'], PDO::PARAM_STR);
-        $stmt->bindParam(":foto", $usuario['foto'], PDO::PARAM_STR);
-        $stmt->bindParam(":nivel", $usuario['nivel'], PDO::PARAM_INT);
-        $stmt->bindParam(":plano_id", $usuario['plano_id'], PDO::PARAM_INT);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":nome", $usuario['nome']);
+        $stmt->bindParam(":email", $usuario['email']);
+        $stmt->bindParam(":senha", $usuario['senha']);
+        $stmt->bindParam(":foto", $usuario['foto']);
+        $stmt->bindParam(":nivel", $usuario['nivel']);
+        $stmt->bindParam(":plano_id", $usuario['plano_id']);
+
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
 
         return true;
@@ -110,8 +117,8 @@ function salvarTokenUsuario($token, $id)
                WHERE id=:id";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":token", $token, PDO::PARAM_STR);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":token", $token);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
 
         return true;
@@ -131,7 +138,7 @@ function deletarUsuario($id)
     $sql = "DELETE FROM usuarios WHERE id=:id";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
         return true;
     } catch (PDOException $e) {
@@ -157,23 +164,23 @@ function consultarDadoUsuario($busca)
 }
 
 
-function validacaoUsuario($editar = false)
+function validacaoUsuario($usuario)
 {
 
-    $validacao = true;
+    $validacao = false;
 
-    if ($_POST['nome'] == "") {
+    if ($usuario['nome'] == "") {
         $_SESSION['nome'] = 'Campo Obrigatório';
-        $validacao = false;
+        $validacao = true;
     }
-    if ($_POST['email'] == "") {
+    if ($usuario['email'] == "") {
         $_SESSION['email'] = 'Campo Obrigatório';
-        $validacao = false;
+        $validacao = true;
     }
 
-    if ($_POST['senha'] == "" && strpos($_SERVER['REQUEST_URI'], 'editar') != true) {
+    if ($usuario['senha'] == "" && strpos($_SERVER['REQUEST_URI'], 'editar') != true) {
         $_SESSION['senha'] = 'Campo Obrigatório';
-        $validacao = false;
+        $validacao = true;
     }
 
     return $validacao;

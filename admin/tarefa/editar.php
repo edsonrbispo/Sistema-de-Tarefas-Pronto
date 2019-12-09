@@ -3,7 +3,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/controllers/TarefaController.php';
 
-$tarefa = editar();
+$tarefa = editar($_GET['id']);
 
 //var_dump($pagina);
 

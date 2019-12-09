@@ -19,9 +19,8 @@ function planos()
     return $planos;
 }
 
-function planoEscolhido()
+function planoEscolhido($id)
 {
-    $id = $_GET['id'];
     $plano = buscarPlano($id);
     return $plano;
 }
@@ -43,15 +42,12 @@ function contratar()
             'foto' => 'default.jpg'
         ];
 
+        if (cadastrarUsuario($usuario)) {
 
-        if (validacaoUsuario()) {
-            if (cadastrarUsuario($usuario)) {
+            $_SESSION['mensagem'] = 'Registro realizado com sucesso! <br> Efetue o login para entrar.';
 
-                $_SESSION['mensagem'] = 'Registro realizado com sucesso! <br> Efetue o login para entrar.';
-
-                header('Location:/login/entrar');
-                exit;
-            }
+            header('Location:/login/entrar');
+            exit;
         }
     }
 

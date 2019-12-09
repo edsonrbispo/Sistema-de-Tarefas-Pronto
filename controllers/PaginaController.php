@@ -33,25 +33,22 @@ function cadastrar()
         $pagina['slug'] = $_POST['slug'];
         $pagina['descricao'] = $_POST['descricao'];
 
-        if (validacaoPagina()) {
-            if (cadastrarPagina($pagina)) {
 
-                $_SESSION['mensagem'] = 'Usuário cadastrado com sucesso!';
+        if (cadastrarPagina($pagina)) {
 
-                header('Location:/admin/pagina');
-                exit;
-            }
+            $_SESSION['mensagem'] = 'Usuário cadastrado com sucesso!';
+
+            header('Location:/admin/pagina');
+            exit;
         }
     }
 
     return $pagina;
 }
 
-function editar()
+function editar($id)
 {
 
-
-    $id = $_GET['id'];
 
     $pagina = buscarPagina($id);
 
@@ -61,14 +58,13 @@ function editar()
         $pagina['slug'] = $_POST['slug'];
         $pagina['descricao'] = $_POST['descricao'];
 
-        if (validacaoPagina()) {
-            if (editarPagina($pagina, $id)) {
 
-                $_SESSION['mensagem'] = 'Usuário editado com sucesso!';
+        if (editarPagina($pagina, $id)) {
 
-                header('Location:/admin/pagina');
-                exit;
-            }
+            $_SESSION['mensagem'] = 'Usuário editado com sucesso!';
+
+            header('Location:/admin/pagina');
+            exit;
         }
     }
 
@@ -83,27 +79,4 @@ function deletar($id)
         header('Location:/admin/pagina');
         exit;
     }
-}
-
-function validacaoPagina()
-{
-
-    $validacao = true;
-
-    if ($_POST['titulo'] == "") {
-        $_SESSION['titulo'] = 'Campo Obrigatório';
-        $validacao = false;
-    }
-
-    if ($_POST['slug'] == "") {
-        $_SESSION['slug'] = 'Campo Obrigatório';
-        $validacao = false;
-    }
-
-    if ($_POST['descricao'] == "") {
-        $_SESSION['descricao'] = 'Campo Obrigatório';
-        $validacao = false;
-    }
-
-    return $validacao;
 }

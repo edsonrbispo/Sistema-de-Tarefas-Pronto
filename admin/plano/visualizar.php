@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/controllers/PlanoController.php';
 
-$plano = visualizar();
+$plano = visualizar($_GET['id']);
 
 
 ?>

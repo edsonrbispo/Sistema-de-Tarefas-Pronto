@@ -5,7 +5,7 @@ require_once  $_SERVER['DOCUMENT_ROOT'] . "/controllers/UsuarioController.php";
 
 $usuario = cadastrar();
 
-$planos = carregarPlanos();
+$planos = selectPlanos();
 
 
 ?>

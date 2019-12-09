@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/controllers/PlanoController.php';
 
-$plano = editar();
+$plano = editar($_GET['id']);
 
 //var_dump($plano);
 

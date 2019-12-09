@@ -2,7 +2,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/controllers/PaginaController.php';
 
-$pagina = editar();
+$pagina = editar($_GET['id']);
 
 //var_dump($pagina);
 

@@ -15,9 +15,8 @@ function index()
     return $usuarios;
 }
 
-function visualizar()
+function visualizar($id)
 {
-    $id = $_GET['id'];
     $usuario = buscarUsuario($id);
     return $usuario;
 }
@@ -47,31 +46,28 @@ function cadastrar()
             }
         }
 
+        if (cadastrarUsuario($usuario)) {
 
-        if (validacaoUsuario()) {
-            if (cadastrarUsuario($usuario)) {
+            $_SESSION['mensagem'] = 'Usuário cadastrado com sucesso!';
 
-                $_SESSION['mensagem'] = 'Usuário cadastrado com sucesso!';
-
-                header('Location:/admin/usuario');
-                exit;
-            }
+            header('Location:/admin/usuario');
+            exit;
         }
     }
+
 
     return $usuario;
 }
 
-function carregarPlanos()
+function selectPlanos()
 {
     $planos = listarPlanos();
     return $planos;
 }
 
 
-function editar()
+function editar($id)
 {
-    $id = $_GET['id'];
 
     $usuario = buscarUsuario($id);
 
@@ -96,23 +92,16 @@ function editar()
             $novo_nome = md5(rand()) . $extensao;
             $dir =  $_SERVER['DOCUMENT_ROOT'] . "/uploads/perfil/";
             if (move_uploaded_file($_FILES['foto']['tmp_name'], $dir . $novo_nome)) {
-
                 $usuario['foto'] = $novo_nome;
-            } else {
-
-                $usuario['foto'] = 'default.jpg';
             }
         }
 
 
-        if (validacaoUsuario()) {
-            if (editarUsuario($usuario, $id)) {
+        if (editarUsuario($usuario, $id)) {
 
-                $_SESSION['mensagem'] = 'Usuário cadastrado com sucesso!';
-
-                header('Location:/admin/usuario');
-                exit;
-            }
+            $_SESSION['mensagem'] = 'Usuário cadastrado com sucesso!';
+            header('Location:/admin/usuario');
+            exit;
         }
     }
 
@@ -133,10 +122,10 @@ function editarPerfil()
         $usuario = [
             'nome' => $_POST['nome'],
             'email' => $_POST['email'],
-            'nivel' => $_POST['nivel'],
-            'plano_id' => $usuario['plano_id'],
             'foto' => $usuario['foto'],
-            'senha' => $usuario['senha']
+            'senha' => $usuario['senha'],
+            'nivel' => $usuario['nivel'],
+            'plano_id' => $usuario['plano_id'],
         ];
 
         if (!empty($_POST['senha'])) {
@@ -148,25 +137,15 @@ function editarPerfil()
             $novo_nome = md5(rand()) . $extensao;
             $dir =  $_SERVER['DOCUMENT_ROOT'] . "/uploads/perfil/";
             if (move_uploaded_file($_FILES['foto']['tmp_name'], $dir . $novo_nome)) {
-
                 $usuario['foto'] = $novo_nome;
-            } else {
-
-                $usuario['foto'] = 'default.jpg';
             }
         }
 
-
-        if (validacaoUsuario()) {
-            if (editarUsuario($usuario, $id)) {
-
-                $_SESSION['usuario'] = buscarUsuario($id);
-
-                $_SESSION['mensagem'] = 'Perfil Atualizado com sucesso!';
-
-                header('Location:/admin/tarefa');
-                exit;
-            }
+        if (editarUsuario($usuario, $id)) {
+            $_SESSION['usuario'] = buscarUsuario($id);
+            $_SESSION['mensagem'] = 'Perfil Atualizado com sucesso!';
+            header('Location:/admin/tarefa');
+            exit;
         }
     }
 

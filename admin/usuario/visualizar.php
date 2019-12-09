@@ -3,7 +3,7 @@
 
 require_once  $_SERVER['DOCUMENT_ROOT'] . "/controllers/UsuarioController.php";
 
-$usuario = visualizar();
+$usuario = visualizar($_GET['id']);
 
 
 ?>

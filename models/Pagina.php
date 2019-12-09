@@ -25,14 +25,17 @@ function listarPaginas()
 
 function cadastrarPagina($pagina)
 {
+    if (validacaoPagina($pagina))
+        return false;
+
     $db = conexao();
     $sql = "INSERT INTO paginas (titulo, slug, descricao) 
                        VALUES (:titulo, :slug, :descricao)";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":titulo", $pagina['titulo'], PDO::PARAM_STR);
-        $stmt->bindParam(":slug", $pagina['slug'], PDO::PARAM_STR);
-        $stmt->bindParam(":descricao", $pagina['descricao'], PDO::PARAM_STR);
+        $stmt->bindParam(":titulo", $pagina['titulo']);
+        $stmt->bindParam(":slug", $pagina['slug']);
+        $stmt->bindParam(":descricao", $pagina['descricao']);
         $stmt->execute();
 
         return true;
@@ -51,7 +54,7 @@ function buscarPagina($id)
 
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (\PDOException $e) {
@@ -68,7 +71,7 @@ function buscarSlug($slug)
 
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":slug", $slug, PDO::PARAM_STR);
+        $stmt->bindParam(":slug", $slug);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch (\PDOException $e) {
@@ -80,6 +83,9 @@ function buscarSlug($slug)
 function editarPagina($pagina, $id)
 {
 
+    if (validacaoPagina($pagina))
+        return false;
+
     $db = conexao();
     $sql = "UPDATE paginas
 
@@ -90,10 +96,10 @@ function editarPagina($pagina, $id)
                 WHERE id=:id";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":titulo", $pagina['titulo'], PDO::PARAM_STR);
-        $stmt->bindParam(":slug", $pagina['slug'], PDO::PARAM_STR);
-        $stmt->bindParam(":descricao", $pagina['descricao'], PDO::PARAM_STR);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":titulo", $pagina['titulo']);
+        $stmt->bindParam(":slug", $pagina['slug']);
+        $stmt->bindParam(":descricao", $pagina['descricao']);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
 
         return true;
@@ -114,11 +120,35 @@ function deletarPagina($id)
     $sql = "DELETE FROM paginas WHERE id=:id";
     try {
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
         return true;
     } catch (PDOException $e) {
         die($e->getMessage());
         return false;
     }
+}
+
+
+function validacaoPagina($pagina)
+{
+
+    $validacao = false;
+
+    if ($pagina['titulo'] == "") {
+        $_SESSION['titulo'] = 'Campo Obrigatório';
+        $validacao = true;
+    }
+
+    if ($pagina['slug'] == "") {
+        $_SESSION['slug'] = 'Campo Obrigatório';
+        $validacao = true;
+    }
+
+    if ($pagina['descricao'] == "") {
+        $_SESSION['descricao'] = 'Campo Obrigatório';
+        $validacao = true;
+    }
+
+    return $validacao;
 }

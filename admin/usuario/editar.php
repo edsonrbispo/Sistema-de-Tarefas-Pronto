@@ -2,9 +2,9 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/controllers/UsuarioController.php';
 
-$usuario = editar();
+$usuario = editar($_GET['id']);
 
-$planos = carregarPlanos();
+$planos = selectPlanos();
 
 //var_dump($pagina);
 

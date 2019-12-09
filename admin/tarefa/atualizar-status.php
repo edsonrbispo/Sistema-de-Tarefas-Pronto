@@ -3,4 +3,4 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/controllers/TarefaController.php';
 
-atualizarStatus();
+atualizarStatus($_GET['id']);

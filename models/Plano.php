@@ -25,6 +25,11 @@ function listarPlanos()
 
 function cadastrarPlano($plano)
 {
+
+    if (validacaoPlano($plano))
+        return false;
+
+
     $db = conexao();
     $sql = "INSERT INTO planos (titulo, descricao, valor) 
                        VALUES (:titulo, :descricao, :valor)";
@@ -63,6 +68,9 @@ function buscarPlano($id)
 
 function editarPlano($plano, $id)
 {
+
+    if (validacaoPlano($plano))
+        return false;
 
     $db = conexao();
     $sql = "UPDATE planos
@@ -105,4 +113,28 @@ function deletarPlano($id)
         die($e->getMessage());
         return false;
     }
+}
+
+
+function validacaoPlano($plano)
+{
+
+    $validacao = false;
+
+    if ($plano['titulo'] == "") {
+        $_SESSION['titulo'] = 'Campo Obrigatório';
+        $validacao = true;
+    }
+
+    if ($plano['descricao'] == "") {
+        $_SESSION['descricao'] = 'Campo Obrigatório';
+        $validacao = true;
+    }
+
+    if ($plano['valor'] == "") {
+        $_SESSION['valor'] = 'Campo Obrigatório';
+        $validacao = true;
+    }
+
+    return $validacao;
 }

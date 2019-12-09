@@ -5,8 +5,6 @@ require_once  $_SERVER['DOCUMENT_ROOT'] . "/controllers/UsuarioController.php";
 
 $usuario = editarPerfil();
 
-$planos = carregarPlanos();
-
 
 ?>
 
@@ -26,7 +24,7 @@ $planos = carregarPlanos();
                 </div>
             </div>
 
-            <?php include 'formulario.php' ?>
+            <?php include 'formularioPerfil.php' ?>
 
         </div>
     </div>

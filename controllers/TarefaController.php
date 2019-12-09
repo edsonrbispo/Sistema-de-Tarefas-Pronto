@@ -17,6 +17,7 @@ function index()
     } else {
         $tarefas = listarTarefas(null);
     }
+
     return $tarefas;
 }
 
@@ -46,14 +47,12 @@ function cadastrar()
         ];
 
 
-        if (validacaoTarefa()) {
-            if (cadastrarTarefa($tarefa)) {
+        if (cadastrarTarefa($tarefa)) {
 
-                $_SESSION['mensagem'] = 'Tarefa cadastrada com sucesso!';
+            $_SESSION['mensagem'] = 'Tarefa cadastrada com sucesso!';
 
-                header('Location:/admin/tarefa');
-                exit;
-            }
+            header('Location:/admin/tarefa');
+            exit;
         }
     }
 
@@ -77,14 +76,13 @@ function editar()
             'status' => $_POST['status']
         ];
 
-        if (validacaoTarefa()) {
-            if (editarTarefa($tarefa, $id)) {
 
-                $_SESSION['mensagem'] = 'Tarefa editada com sucesso!';
+        if (editarTarefa($tarefa, $id)) {
 
-                header('Location:/admin/tarefa');
-                exit;
-            }
+            $_SESSION['mensagem'] = 'Tarefa editada com sucesso!';
+
+            header('Location:/admin/tarefa');
+            exit;
         }
     }
 
@@ -94,31 +92,17 @@ function editar()
 function deletar($id)
 {
     if (deletarTarefa($id)) {
-
         $_SESSION['mensagem'] = 'Tarefa deletada com sucesso!';
         header('Location:/admin/tarefa');
         exit;
     }
 }
 
-function validacaoTarefa()
-{
-
-    $validacao = true;
-
-    if ($_POST['tarefa'] == "") {
-        $_SESSION['tarefa'] = 'Campo Obrigatório';
-        $validacao = false;
-    }
-
-    return $validacao;
-}
 
 //Requisição Ajax
-function atualizarStatus()
+function atualizarStatus($id)
 {
-    $id = $_GET['id'];
-    if (atualizarStatusTarefa($_GET['id'])) {
+    if (atualizarStatusTarefa($id)) {
         echo 'ok';
     } else {
         echo 'Erro';
